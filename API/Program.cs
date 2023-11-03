@@ -38,7 +38,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var efLocalConnection = builder.Configuration.GetSection("ConnectionStrings").GetValue<string>("LocalConnection");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
