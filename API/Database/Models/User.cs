@@ -7,5 +7,6 @@
         public string LastName { get; set; }
         public string Email { get; set; }
         public string LinkedInProfile { get; set; }
+        public List<JobApplication> JobApplications { get; set; }
     }
 }
