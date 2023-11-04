@@ -10,5 +10,17 @@ namespace API.Database
         public DbSet<JobApplication> JobApplications { get; set; }
         public DbSet<ApplicationLog> ApplicationLogs { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .HasMany(c => c.JobApplications)
+                .WithOne(p => p.User)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<JobApplication>()
+                .HasMany(c => c.ApplicationLogs)
+                .WithOne(p => p.JobApplication)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }
