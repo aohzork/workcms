@@ -8,13 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 var environment = builder.Configuration.GetSection("Environment").Value ?? "Development";
 
 // Read Api settings from appropriate appsettings file
-var apiSettingsFileName = $"apisettings.{environment}.json";
+var apiSettingsFileName = $"appsettings.{environment}.json";
 var apiSettingsConfiguration = new ConfigurationBuilder()
     .SetBasePath(builder.Environment.ContentRootPath)
-    .AddJsonFile("apisettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile(apiSettingsFileName, optional: true, reloadOnChange: true)
     .Build();
-
 
 var apiSettings = new ApiSettings();
 apiSettingsConfiguration.Bind(apiSettings);
