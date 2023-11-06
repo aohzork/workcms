@@ -10,6 +10,7 @@ namespace API.Database
         public DbSet<User> Users { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }
         public DbSet<ApplicationLog> ApplicationLogs { get; set; }
+        public DbSet<UCred> UCreds { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
