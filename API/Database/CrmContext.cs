@@ -5,6 +5,7 @@ namespace API.Database
 {
     public class CrmContext : DbContext
     {
+        public CrmContext(DbContextOptions<CrmContext> options):base(options) { }
         //entities
         public DbSet<User> Users { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }
