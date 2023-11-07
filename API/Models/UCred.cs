@@ -1,4 +1,4 @@
-﻿namespace API.Database.Models
+﻿namespace API.Models
 {
     public class UCred
     {

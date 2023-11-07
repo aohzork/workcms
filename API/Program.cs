@@ -1,4 +1,6 @@
 using API.Database;
+using API.Services;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +32,8 @@ builder.Services.AddDbContext<CrmContext>(options =>
         options.UseSqlServer(connectionStrings.Production);
     }
 });
+
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Add services to the container.
 
