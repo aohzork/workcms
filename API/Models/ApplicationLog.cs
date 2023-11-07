@@ -1,6 +1,6 @@
 ﻿using Microsoft.Identity.Client;
 
-namespace API.Database.Models
+namespace API.Models
 {
     public class ApplicationLog
     {
