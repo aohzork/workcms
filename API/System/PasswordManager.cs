@@ -1,4 +1,6 @@
-﻿namespace API.System
+﻿using BCrypt.Net;
+
+namespace API.System
 {
     public class PasswordManager
     {
