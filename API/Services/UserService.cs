@@ -1,6 +1,7 @@
 ﻿using API.Database;
 using API.DTOs;
 using API.Models;
+using API.System;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
@@ -8,16 +9,41 @@ namespace API.Services
     public class UserService : IUserService
     {
         private readonly CrmContext _context;
+        private readonly UserSystem _userSystem = new();
 
-        public async Task CreateUserAsync(UserDTO user)
+        public UserService(CrmContext context)
         {
-            await _context.AddAsync(new User
-            {
-                UserName = user.UserName,
-                Email = user.Email,  
-            });
+            _context = context;
+        }
 
-            await _context.SaveChangesAsync();
+        public async Task CreateUserAsync(CreateUserDTO user)
+        {
+
+                await _context.AddAsync(new User
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,  
+                });
+                
+                await _context.SaveChangesAsync();
+                
+                var savedUser = await _context.Set<User>().SingleAsync(x=> x.UserName == user.UserName);
+
+                var userCredentials = PasswordManager.HashPassword(user.Password);
+
+                await _context.AddAsync(new UCred
+                {
+                    UserId = savedUser.Id,
+                    Password = userCredentials.passwordHash,
+                    Salt = userCredentials.salt
+                });
+
+                await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsUserNameAvaliableAsync(string userName)
+        {       
+            return await Task.Run(() => _userSystem.ValidateIfUserExists(userName, _context));
         }
 
         public async Task UpdateUserAsync(UserDTO user)

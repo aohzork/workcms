@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/v1.0/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -30,8 +30,9 @@ namespace API.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] UserDTO user)
+        public async Task<IActionResult> Post([FromBody] CreateUserDTO user)
         {
             await _userService.CreateUserAsync(user);
             return Ok();
@@ -58,6 +59,17 @@ namespace API.Controllers
         {
             await _userService.DeleteUserAsync(id);
             return Ok();
+        }
+        /// <summary>
+        /// Check if user name is avaliable
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        [HttpGet("checkUser/{userName}")]
+        public async Task<IActionResult> CheckUserNameAvalibility (string userName)
+        {
+            var isAvaliable = await _userService.IsUserNameAvaliableAsync(userName);
+            return Ok(isAvaliable);
         }
     }
 }
