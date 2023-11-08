@@ -16,29 +16,51 @@ namespace API.Services
             _context = context;
         }
 
-        public async Task CreateUserAsync(CreateUserDTO user)
+        public async Task<bool> CreateUserAsync(CreateUserDTO user)
         {
-
-                await _context.AddAsync(new User
+            try
+            {
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    UserName = user.UserName,
-                    Email = user.Email,  
-                });
-                
-                await _context.SaveChangesAsync();
-                
-                var savedUser = await _context.Set<User>().SingleAsync(x=> x.UserName == user.UserName);
+                    try
+                    {
+                        var newUser = new User
+                        {
+                            UserName = user.UserName,
+                            Email = user.Email,
+                        };
 
-                var userCredentials = PasswordManager.HashPassword(user.Password);
+                        _context.Users.Add(newUser);
+                        await _context.SaveChangesAsync();
 
-                await _context.AddAsync(new UCred
-                {
-                    UserId = savedUser.Id,
-                    Password = userCredentials.passwordHash,
-                    Salt = userCredentials.salt
-                });
+                        var userCredentials = PasswordManager.HashPassword(user.Password);
+                        var newUCred = new UCred
+                        {
+                            UserId = newUser.Id,
+                            Password = userCredentials.passwordHash,
+                            Salt = userCredentials.salt
+                        };
 
-                await _context.SaveChangesAsync();
+                        _context.UCreds.Add(newUCred);
+                        await _context.SaveChangesAsync();
+
+                        transaction.Commit();
+
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
         }
 
         public async Task<bool> IsUserNameAvaliableAsync(string userName)

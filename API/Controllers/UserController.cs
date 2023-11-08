@@ -54,7 +54,7 @@ namespace API.Controllers
         /// Delete a user with soft delete
         /// </summary>
         /// <param name="id"></param>
-        [HttpDelete("{id}")]
+        [HttpPut("deleteUser{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _userService.DeleteUserAsync(id);

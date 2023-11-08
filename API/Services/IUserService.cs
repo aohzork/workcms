@@ -7,7 +7,7 @@ namespace API.Services
     {
         Task<UserDTO> GetUserByIdAsync(int id);
         Task<IList<UserDTO>> GeAllUsersAsync();
-        Task CreateUserAsync(CreateUserDTO user);
+        Task<bool> CreateUserAsync(CreateUserDTO user);
         Task UpdateUserAsync(UserDTO user);
         Task DeleteUserAsync(int id);
         Task<bool> IsUserNameAvaliableAsync(string userName);
