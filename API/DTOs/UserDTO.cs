@@ -1,4 +1,6 @@
-﻿namespace API.DTOs
+﻿using API.Models;
+
+namespace API.DTOs
 {
     public class UserDTO
     {
@@ -8,6 +10,7 @@
         public string LastName { get; set; }
         public string Email { get; set; }
         public string LinkedInProfile { get; set; }
+        public List<JobApplicationDTO> JobApplications { get; set; }
         public bool isDeleted { get; set; }
     }
 }

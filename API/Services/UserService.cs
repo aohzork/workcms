@@ -1,6 +1,7 @@
 ﻿using API.Database;
 using API.DTOs;
 using API.Models;
+using API.System;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
@@ -8,16 +9,63 @@ namespace API.Services
     public class UserService : IUserService
     {
         private readonly CrmContext _context;
+        private readonly UserSystem _userSystem = new();
 
-        public async Task CreateUserAsync(UserDTO user)
+        public UserService(CrmContext context)
         {
-            await _context.AddAsync(new User
-            {
-                UserName = user.UserName,
-                Email = user.Email,  
-            });
+            _context = context;
+        }
 
-            await _context.SaveChangesAsync();
+        public async Task<bool> CreateUserAsync(CreateUserDTO user)
+        {
+            try
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var newUser = new User
+                        {
+                            UserName = user.UserName,
+                            Email = user.Email,
+                        };
+
+                        _context.Users.Add(newUser);
+                        await _context.SaveChangesAsync();
+
+                        var userCredentials = PasswordManager.HashPassword(user.Password);
+                        var newUCred = new UCred
+                        {
+                            UserId = newUser.Id,
+                            Password = userCredentials.passwordHash,
+                            Salt = userCredentials.salt
+                        };
+
+                        _context.UCreds.Add(newUCred);
+                        await _context.SaveChangesAsync();
+
+                        transaction.Commit();
+
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> IsUserNameAvaliableAsync(string userName)
+        {       
+            return await Task.Run(() => _userSystem.ValidateIfUserExists(userName, _context));
         }
 
         public async Task UpdateUserAsync(UserDTO user)
