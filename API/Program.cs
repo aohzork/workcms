@@ -31,18 +31,27 @@ builder.Services.AddDbContext<CrmContext>(options =>
     {
         options.UseSqlServer(connectionStrings.Production);
     }
+
 });
 
 builder.Services.AddScoped<IUserService, UserService>();
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Migrate database on startup. Comment if just want to apply migrations manually
 var app = builder.Build();
+app.Map("/migrate", () =>
+{
+    using (var serviceScope = app.Services.CreateScope())
+    {
+        var context = serviceScope.ServiceProvider.GetRequiredService<CrmContext>();
+        context.Database.Migrate();
+    }
+});
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
