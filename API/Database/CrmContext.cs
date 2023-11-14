@@ -23,6 +23,31 @@ namespace API.Database
                 .HasMany(c => c.ApplicationLogs)
                 .WithOne(p => p.JobApplication)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>().HasData(new User {
+                Id = 1,
+                UserName = "Testuser",
+                FirstName = "Test",
+                LastName = "User",
+                Email = "test.user@workcrm.com",
+                LinkedInProfile = "https://www.linkedin.com/in/test-user-a0x11111"
+            });
+
+            modelBuilder.Entity<JobApplication>().HasData(new JobApplication
+            {
+                Id = 1,
+                UserId = 1,
+                Company = "Test Company",
+                ApplicationURL = "https://www.test-application-workcrm.com"
+            });
+
+            modelBuilder.Entity<ApplicationLog>().HasData(new ApplicationLog
+            {
+                Id=1,
+                ApplicationId = 1,
+                Message = "Test message",
+                Date = DateTime.Now,
+            });
         }
     }
 }
