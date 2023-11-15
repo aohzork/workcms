@@ -59,13 +59,14 @@ namespace API.Database
                 Id = 1,
                 UserId = 1,
                 Company = "Test Company",
+                Notes = "Here are some test notes about the company or such",
                 ApplicationURL = "https://www.test-application-workcrm.com"
             });
 
             modelBuilder.Entity<ApplicationLog>().HasData(new ApplicationLog
             {
-                Id=1,
-                ApplicationId = 1,
+                Id= 1,
+                JobApplicationId = 1,
                 Message = "Test message",
                 Date = new DateTime(2023, 1, 1)
             });
