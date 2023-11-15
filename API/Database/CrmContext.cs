@@ -59,6 +59,7 @@ namespace API.Database
                 Id = 1,
                 UserId = 1,
                 Company = "Test Company",
+                Notes = "Here are some test notes about the company or such",
                 ApplicationURL = "https://www.test-application-workcrm.com"
             });
 
