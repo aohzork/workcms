@@ -64,8 +64,8 @@ namespace API.Database
 
             modelBuilder.Entity<ApplicationLog>().HasData(new ApplicationLog
             {
-                Id=1,
-                ApplicationId = 1,
+                Id= 1,
+                JobApplicationId = 1,
                 Message = "Test message",
                 Date = new DateTime(2023, 1, 1)
             });
