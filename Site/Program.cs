@@ -4,6 +4,20 @@ using Site.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Determine the environment
+var environment = builder.Configuration.GetSection("Environment").Value ?? "Development";
+
+// Read Api settings from appropriate appsettings file
+var apiSettingsFileName = $"appsettings.{environment}.json";
+var apiSettingsConfiguration = new ConfigurationBuilder()
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile(apiSettingsFileName, optional: true, reloadOnChange: true)
+    .Build();
+
+var apiSettings = new ApiSettings();
+apiSettingsConfiguration.Bind(apiSettings);
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
