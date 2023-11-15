@@ -5,12 +5,33 @@ namespace API.Database
 {
     public class CrmContext : DbContext
     {
-        public CrmContext(DbContextOptions<CrmContext> options):base(options) { }
+        private readonly IWebHostEnvironment _environment;
+
+        public CrmContext(DbContextOptions<CrmContext> options, IWebHostEnvironment environment) :base(options)
+        {
+            _environment = environment;
+        }
         //entities
         public DbSet<User> Users { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }
         public DbSet<ApplicationLog> ApplicationLogs { get; set; }
         public DbSet<UCred> UCreds { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (_environment.IsDevelopment())
+            {
+                string databasePath = @"C:\Temp\Db";
+                string databaseName = "LocalWorkCRM.db";
+
+                if (!Directory.Exists(databasePath))
+                {
+                    Directory.CreateDirectory(databasePath);
+                }
+
+                optionsBuilder.UseSqlServer(databaseName);
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
