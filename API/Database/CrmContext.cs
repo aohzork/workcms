@@ -46,7 +46,7 @@ namespace API.Database
                 Id=1,
                 ApplicationId = 1,
                 Message = "Test message",
-                Date = DateTime.Now,
+                Date = new DateTime(2023, 1, 1)
             });
         }
     }
