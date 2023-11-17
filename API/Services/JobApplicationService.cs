@@ -16,6 +16,23 @@ namespace API.Services
             _context = context;
         }
 
+        public async Task<JobApplicationDTO> GetJobApplicationByIdAsync(int jobId)
+        {
+            var application = await _context.Set<JobApplication>().SingleAsync(x => x.Id == jobId);
+
+            var mappedApplication = new JobApplicationDTO()
+            {
+                Id = application.Id,
+                UserId = application.UserId,
+                Company = application.Company,
+                Notes = application.Notes,
+                ApplicationURL = application.ApplicationURL,
+                isActive = application.isActive
+            };
+
+            return mappedApplication;
+        }
+
         public async Task<bool> CreateJobApplicationAsync(JobApplicationDTO jobApplicationDTO)
         {
             try
@@ -52,6 +69,23 @@ namespace API.Services
             }
         }
 
+        public async Task UpdateJobApplicationAsync(JobApplicationUpdateRequestDTO jobApplicationUpdateRequest)
+        {
+            var application = await _context.Set<JobApplication>().SingleAsync(x => x.UserId == jobApplicationUpdateRequest.UserId
+                                                                                     && x.Id == jobApplicationUpdateRequest.Id);
+
+            if (application == null)
+            {
+                return;
+            }
+
+            application.Company = jobApplicationUpdateRequest.Company;
+            application.Notes = jobApplicationUpdateRequest.Notes;
+            application.ApplicationURL = jobApplicationUpdateRequest.ApplicationURL;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task DeleteJobApplicationAsync(int jobId)
         {
             try
@@ -82,23 +116,6 @@ namespace API.Services
             }
         }
 
-        public async Task<JobApplicationDTO> GetJobApplicationByIdAsync(int jobId)
-        {
-            var application = await _context.Set<JobApplication>().SingleAsync(x =>  x.Id == jobId);
-
-            var mappedApplication = new JobApplicationDTO()
-            {
-                Id = application.Id,
-                UserId = application.UserId,
-                Company = application.Company,
-                Notes = application.Notes,
-                ApplicationURL = application.ApplicationURL,
-                isActive = application.isActive
-            };
-
-            return mappedApplication;
-        }
-
         public async Task<List<JobApplicationDTO>> GetJobApplicationsByUserAsync(int userId)
         {
             throw new NotImplementedException();
@@ -108,23 +125,6 @@ namespace API.Services
         {
             var application = await _context.Set<JobApplication>().SingleAsync(x => x.Id == jobId);
             application.isActive = !application.isActive;
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateJobApplicationASync(JobApplicationUpdateRequestDTO jobApplicationUpdateRequest)
-        {
-            var application = await _context.Set<JobApplication>().SingleAsync(x => x.UserId == jobApplicationUpdateRequest.UserId
-                                                                                     && x.Id == jobApplicationUpdateRequest.Id);
-
-            if(application == null)
-            {
-                return;
-            }
-
-            application.Company = jobApplicationUpdateRequest.Company;
-            application.Notes = jobApplicationUpdateRequest.Notes;
-            application.ApplicationURL = jobApplicationUpdateRequest.ApplicationURL;
 
             await _context.SaveChangesAsync();
         }

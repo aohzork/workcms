@@ -9,6 +9,6 @@ namespace API.Services
         Task ToggleJobApplicationAsync(int jobId);
         Task<bool> CreateJobApplicationAsync(JobApplicationDTO jobApplicationDTO);
         Task DeleteJobApplicationAsync (int jobId);
-        Task UpdateJobApplicationASync (JobApplicationUpdateRequestDTO jobApplicationDTO);
+        Task UpdateJobApplicationAsync (JobApplicationUpdateRequestDTO jobApplicationDTO);
     }
 }
