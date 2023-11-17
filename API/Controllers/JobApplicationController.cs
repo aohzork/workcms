@@ -22,10 +22,9 @@ namespace API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("id")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<ActionResult<JobApplicationDTO>> Get(int id)
         {
-            await _jobApplicationService.GetJobApplicationByIdAsync(id);
-            return Ok();
+            return await _jobApplicationService.GetJobApplicationByIdAsync(id);
         }
 
         /// <summary>
